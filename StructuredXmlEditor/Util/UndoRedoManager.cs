@@ -143,6 +143,21 @@ public class UndoRedoManager : NotifyPropertyChanged
 		}
 	}
 
+	public bool IsDataChange
+	{
+		get
+		{
+			if (savePoint == null)
+			{
+				return UndoStack.Count != 0;
+			}
+			else
+			{
+				return UndoStack.Count == 0 ? true : UndoStack.Peek() != savePoint;
+			}
+		}
+	}
+
 	public bool CanUndo
 	{
 		get { return UndoStack.Count > 0; }
@@ -288,6 +303,7 @@ public class UndoRedoManager : NotifyPropertyChanged
 				UndoStack.Push(group);
 			}
 
+			RaisePropertyChangedEvent("IsDataChange");
 			RaisePropertyChangedEvent("IsModified");
 			RaisePropertyChangedEvent("CanUndo");
 			RaisePropertyChangedEvent("CanRedo");
@@ -325,6 +341,7 @@ public class UndoRedoManager : NotifyPropertyChanged
 			group.Undo();
 			RedoStack.Push(group);
 
+			RaisePropertyChangedEvent("IsDataChange");
 			RaisePropertyChangedEvent("IsModified");
 			RaisePropertyChangedEvent("CanUndo");
 			RaisePropertyChangedEvent("CanRedo");
@@ -340,6 +357,7 @@ public class UndoRedoManager : NotifyPropertyChanged
 			group.Do();
 			UndoStack.Push(group);
 
+			RaisePropertyChangedEvent("IsDataChange");
 			RaisePropertyChangedEvent("IsModified");
 			RaisePropertyChangedEvent("CanUndo");
 			RaisePropertyChangedEvent("CanRedo");

@@ -88,7 +88,14 @@ namespace StructuredXmlEditor.Data
 			this.Path = path;
 			this.Workspace = workspace;
 
-			UndoRedo.PropertyChanged += (sender, args) => { RaisePropertyChangedEvent("Title"); };
+			UndoRedo.PropertyChanged += (sender, args) =>
+			{
+				if (args.PropertyName == "IsDataChange")
+				{
+					this.Workspace.Save();
+				}
+				RaisePropertyChangedEvent("Title");
+			};
 
 			backupTimer = new Timer();
 			backupTimer.Interval = 5000; // 5 seconds
